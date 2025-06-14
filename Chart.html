@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Analytics Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        .analytics-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(102, 126, 234, 0.4);
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .positive {
+            color: #28a745;
+        }
+
+        .negative {
+            color: #dc3545;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .performance-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+
+        .badge-excellent {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .badge-good {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+        }
+
+        .time-period-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .period-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .period-btn.active,
+        .period-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .portfolio-summary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .allocation-chart {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .metric-value {
+                font-size: 2rem;
+            }
+            
+            .chart-container {
+                height: 300px;
+                padding: 1rem;
+            }
+            
+            .time-period-selector {
+                justify-content: center;
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            }
+            50% {
+                box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+            }
+            100% {
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Portfolio Analytics Section -->
+    <section id="analytics" class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title display-5 fw-bold">Portfolio Analytics</h2>
+                <p class="lead text-muted">Visualize your investment performance and assess your diversification strategy</p>
+            </div>
+
+            <!-- Performance Summary Cards -->
+            <div class="row mb-5">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="metric-card pulse-animation">
+                        <div class="metric-value positive">
+                            <i class="fas fa-arrow-up me-2"></i>+24.7%
+                        </div>
+                        <div class="metric-label">Total Return</div>
+                        <small class="text-muted">vs. last year</small>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="metric-card">
+                        <div class="metric-value text-primary">$127,350</div>
+                        <div class="metric-label">Portfolio Value</div>
+                        <small class="text-success">+$25,350 profit</small>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="metric-card">
+                        <div class="metric-value positive">+18.2%</div>
+                        <div class="metric-label">YTD Performance</div>
+                        <small class="text-muted">Year to date</small>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="metric-card">
+                        <div class="metric-value text-info">7.3%</div>
+                        <div class="metric-label">Monthly Return</div>
+                        <small class="text-success">Above average</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Performance Chart -->
+            <div class="analytics-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Investment Performance
+                    </h4>
+                    <div class="time-period-selector">
+                        <button class="period-btn" onclick="updateChart('1M')">1M</button>
+                        <button class="period-btn" onclick="updateChart('3M')">3M</button>
+                        <button class="period-btn" onclick="updateChart('6M')">6M</button>
+                        <button class="period-btn active" onclick="updateChart('1Y')">1Y</button>
+                        <button class="period-btn" onclick="updateChart('ALL')">ALL</button>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="performance-badge badge-excellent">
+                                <i class="fas fa-trophy me-1"></i>Outperforming S&P 500
+                            </span>
+                            <span class="performance-badge badge-good">
+                                <i class="fas fa-shield-alt me-1"></i>Risk-Adjusted Returns
+                            </span>
+                            <span class="performance-badge badge-excellent">
+                                <i class="fas fa-trending-up me-1"></i>Consistent Growth
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <div class="mt-3 mt-md-0">
+                            <small class="text-light">Sharpe Ratio: <strong>1.47</strong></small><br>
+                            <small class="text-light">Max Drawdown: <strong>-8.2%</strong></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio Breakdown -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="portfolio-summary">
+                        <h5 class="mb-4">
+                            <i class="fas fa-pie-chart me-2 text-primary"></i>Asset Allocation Performance
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Technology Stocks</span>
+                                        <span class="text-success">+31.2%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" style="width: 45%"></div>
+                                    </div>
+                                    <small class="text-muted">45% allocation</small>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Healthcare</span>
+                                        <span class="text-success">+22.8%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-info" style="width: 25%"></div>
+                                    </div>
+                                    <small class="text-muted">25% allocation</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Real Estate</span>
+                                        <span class="text-success">+15.4%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 20%"></div>
+                                    </div>
+                                    <small class="text-muted">20% allocation</small>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Bonds & Cash</span>
+                                        <span class="text-success">+4.1%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-secondary" style="width: 10%"></div>
+                                    </div>
+                                    <small class="text-muted">10% allocation</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="metric-card h-100 d-flex flex-column justify-content-center">
+                        <div class="allocation-chart">
+                            <canvas id="allocationChart"></canvas>
+                        </div>
+                        <div class="mt-3">
+                            <h6 class="text-center">Portfolio Diversification</h6>
+                            <p class="text-muted text-center small mb-0">
+                                Well-balanced allocation across sectors
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Performance Chart Data
+        const performanceData = {
+            '1M': {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                portfolio: [102000, 105500, 103800, 107200],
+                sp500: [102000, 103200, 102800, 104500]
+            },
+            '3M': {
+                labels: ['Month 1', 'Month 2', 'Month 3'],
+                portfolio: [95000, 108000, 127350],
+                sp500: [95000, 102000, 115000]
+            },
+            '6M': {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                portfolio: [88000, 92000, 95000, 108000, 118000, 127350],
+                sp500: [88000, 89500, 95000, 102000, 108000, 115000]
+            },
+            '1Y': {
+                labels: ['Jul 2024', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan 2025', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                portfolio: [102000, 98000, 88000, 92000, 95000, 108000, 118000, 115000, 120000, 125000, 118000, 127350],
+                sp500: [102000, 100000, 88000, 89500, 95000, 102000, 108000, 106000, 109000, 112000, 108000, 115000]
+            },
+            'ALL': {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025 YTD'],
+                portfolio: [45000, 62000, 55000, 78000, 95000, 127350],
+                sp500: [45000, 58000, 52000, 72000, 88000, 115000]
+            }
+        };
+
+        let performanceChart;
+        let allocationChart;
+
+        // Initialize Charts
+        function initCharts() {
+            // Performance Chart
+            const ctx1 = document.getElementById('performanceChart').getContext('2d');
+            performanceChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: performanceData['1Y'].labels,
+                    datasets: [{
+                        label: 'Your Portfolio',
+                        data: performanceData['1Y'].portfolio,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }, {
+                        label: 'S&P 500',
+                        data: performanceData['1Y'].sp500,
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointBackgroundColor: '#dc3545',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#667eea',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value / 1000) + 'K';
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+
+            // Allocation Chart
+            const ctx2 = document.getElementById('allocationChart').getContext('2d');
+            allocationChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Technology', 'Healthcare', 'Real Estate', 'Bonds & Cash'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: [
+                            '#28a745',
+                            '#17a2b8',
+                            '#ffc107',
+                            '#6c757d'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Chart Function
+        function updateChart(period) {
+            // Update active button
+            document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update chart data
+            const data = performanceData[period];
+            performanceChart.data.labels = data.labels;
+            performanceChart.data.datasets[0].data = data.portfolio;
+            performanceChart.data.datasets[1].data = data.sp500;
+            performanceChart.update('active');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+    </script>
+</body>
+</html>

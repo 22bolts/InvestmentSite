@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tesla Miner - Smart Investment Platform</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="investment, stocks, portfolio, trading, finance" name="keywords">
+    <meta content="Professional investment platform for smart investors. Monitor your portfolio, track profits, and invest with confidence." name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style2.css" rel="stylesheet">
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            --warning-gradient: linear-gradient(135deg, #ffd93d 0%, #ff9500 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .analytics-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: none;
+            height: 100%;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .positive { color: #28a745; }
+        .negative { color: #dc3545; }
+        .neutral { color: #6c757d; }
+
+        .investment-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table th {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 1rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .investment-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-conservative {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .badge-balanced {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+        }
+
+        .badge-aggressive {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+            color: white;
+        }
+
+        .performance-chart {
+            height: 400px;
+            margin: 1rem 0;
+        }
+
+        .allocation-chart {
+            height: 300px;
+            margin: 1rem 0;
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .period-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .period-btn:hover, .period-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .action-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .action-btn.secondary {
+            background: #6c757d;
+        }
+
+        .action-btn.danger {
+            background: var(--danger-gradient);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .status-active { background: #28a745; }
+        .status-withdrawn { background: #dc3545; }
+        .status-partial { background: #ffc107; }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .analytics-header {
+                padding: 2rem 0;
+            }
+            
+            .metric-value {
+                font-size: 2rem;
+            }
+            
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Live Market Ticker -->
+    <div class="live-ticker">
+        <div class="ticker-content">
+            <span class="me-5">📈 AAPL: +2.4% ($175.23)</span>
+            <span class="me-5">📊 MSFT: +1.8% ($412.45)</span>
+            <span class="me-5">🚀 TSLA: +5.2% ($195.67)</span>
+            <span class="me-5">💎 NVDA: +3.1% ($789.23)</span>
+            <span class="me-5">📱 GOOGL: +0.9% ($134.78)</span>
+            <span class="me-5">💰 BTC: +7.3% ($43,567)</span>
+            <span class="me-5">⚡ ETH: +4.8% ($2,789)</span>
+        </div>
+    </div>
+
+    <!-- Topbar Start -->
+    <div class="container-fluid px-0 d-none d-lg-block">
+        <div class="container px-0">
+            <div class="row gx-0 align-items-center" style="height: 45px;">
+                <div class="col-lg-8 text-center text-lg-start mb-lg-0">
+                    <div class="d-flex flex-wrap">
+                        <a href="#" class="text-muted me-4"><i class="fas fa-map-marker-alt text-primary me-2"></i>Find A Location</a>
+                        <a href="#" class="text-muted me-4"><i class="fas fa-phone-alt text-primary me-2"></i>+01234567890</a>
+                        <a href="#" class="text-muted me-0"><i class="fas fa-envelope text-primary me-2"></i>Example@gmail.com</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center text-lg-end">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <a href="#" class="btn btn-primary btn-square rounded-circle nav-fill me-3"><i class="fab fa-facebook-f text-white"></i></a>
+                        <a href="#" class="btn btn-primary btn-square rounded-circle nav-fill me-3"><i class="fab fa-twitter text-white"></i></a>
+                        <a href="#" class="btn btn-primary btn-square rounded-circle nav-fill me-3"><i class="fab fa-instagram text-white"></i></a>
+                        <a href="#" class="btn btn-primary btn-square rounded-circle nav-fill me-0"><i class="fab fa-linkedin-in text-white"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+    
+    <!-- Navbar & Hero Start -->
+    <div class="container-fluid sticky-top px-0">
+        <div class="position-absolute bg-white" style="left: 0; top: 0; width: 100%; height: 100%;">
+        </div>
+        <div class="container px-0">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-white py-3 px-4">
+                <div class="container">
+                    <!-- <a class="navbar-brand text-gradient" href="#">
+                        <i class="fas fa-chart-line me-2"></i>Investo
+                    </a> -->
+                    <img src="img/TeslaMinerIcon.png" alt="About Tesla Miner" class="header-icon">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item">
+                                <a class="nav-item nav-link active" href="#home">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item nav-link" href="#investments">Investments</a>
+                            </li>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Plans</a>
+                                <div class="dropdown-menu m-0">
+                                    <a href="investment-detail.html?portfolio=conservative" class="dropdown-item">Conservative</a>
+                                    <a href="team.html" class="dropdown-item">Balanced</a>
+                                    <a href="testimonial.html" class="dropdown-item">Aggressive</a>
+                                </div>
+                            </div>
+                            <li class="nav-item">
+                                <a class="nav-item nav-link" href="#about.html">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item nav-link" href="team.html">Team</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-item nav-link" href="contact.html">Contact us</a>
+                            </li>
+                        </ul>
+
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-outline-primary me-2" onclick="window.location.href='authenticate.html'">Login</button>
+                            <button class="btn btn-gradient px-4">Start Investing</button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar & Hero End -->
+        
+
+    <!-- Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h4 class="modal-title mb-0" id="exampleModalLabel">Search by keyword</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center">
+                    <div class="input-group w-75 mx-auto d-flex">
+                        <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Search End -->
+
+    <!-- Header -->
+    <div class="analytics-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-4 fw-bold mb-3">Portfolio Analytics</h1>
+                    <p class="lead mb-0">Track your investment performance, analyze returns, and monitor your portfolio growth</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="mt-3 mt-md-0">
+                        <small class="opacity-75">Last Updated: <strong>June 14, 2025</strong></small><br>
+                        <small class="opacity-75">Total Investments: <strong>7 Active</strong></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="metric-card pulse">
+                    <div class="metric-value positive">$127,350</div>
+                    <div class="metric-label">Total Portfolio Value</div>
+                    <small class="text-success">+$25,350 profit</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="metric-card">
+                    <div class="metric-value positive">+24.7%</div>
+                    <div class="metric-label">Total Return</div>
+                    <small class="text-muted">All-time performance</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="metric-card">
+                    <div class="metric-value neutral">$8,500</div>
+                    <div class="metric-label">Total Withdrawn</div>
+                    <small class="text-muted">Across all investments</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="metric-card">
+                    <div class="metric-value positive">+18.2%</div>
+                    <div class="metric-label">YTD Performance</div>
+                    <small class="text-success">Beating market average</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="analytics-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="gradient-text mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Portfolio Performance
+                </h4>
+                <div class="period-selector">
+                    <button class="period-btn" onclick="updateChart('1M')">1M</button>
+                    <button class="period-btn" onclick="updateChart('3M')">3M</button>
+                    <button class="period-btn" onclick="updateChart('6M')">6M</button>
+                    <button class="period-btn active" onclick="updateChart('1Y')">1Y</button>
+                    <button class="period-btn" onclick="updateChart('ALL')">ALL</button>
+                </div>
+            </div>
+            <div class="performance-chart">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Investment Portfolio Table -->
+        <div class="analytics-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="gradient-text mb-0">
+                    <i class="fas fa-wallet me-2"></i>Investment Portfolio
+                </h4>
+                <div>
+                    <button class="action-btn me-2">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-plus me-1"></i>New Investment
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Investment Type</th>
+                            <th>Initial Amount</th>
+                            <th>Current Value</th>
+                            <th>Gain/Loss</th>
+                            <th>Return %</th>
+                            <th>Withdrawn</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="investmentTableBody">
+                        <!-- Investment data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Asset Allocation -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="analytics-card">
+                    <h4 class="gradient-text mb-4">
+                        <i class="fas fa-chart-pie me-2"></i>Asset Allocation Breakdown
+                    </h4>
+                    <div class="allocation-chart">
+                        <canvas id="allocationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="analytics-card">
+                    <h5 class="gradient-text mb-4">
+                        <i class="fas fa-trophy me-2"></i>Performance Summary
+                    </h5>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Best Performing:</span>
+                            <span class="text-success fw-bold">Aggressive Growth</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Highest Return:</span>
+                            <span class="text-success fw-bold">+31.4%</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Total Dividends:</span>
+                            <span class="text-info fw-bold">$2,150</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Risk Score:</span>
+                            <span class="text-warning fw-bold">Medium</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <button class="action-btn w-100">
+                            <i class="fas fa-chart-bar me-2"></i>Detailed Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+        <!-- Footer Start -->
+        <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
+            <div class="container py-5">
+                <div class="row g-5">
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="footer-item d-flex flex-column">
+                            <div class="footer-item">
+                                <h4 class="text-white mb-4">Newsletter</h4>
+                                <p class="mb-3">Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elit.</p>
+                                <div class="position-relative mx-auto rounded-pill">
+                                    <input class="form-control rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Enter your email">
+                                    <button type="button" class="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 mt-2 me-2">SignUp</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="footer-item d-flex flex-column">
+                            <h4 class="text-white mb-4">Explore</h4>
+                            <a href="#"><i class="fas fa-angle-right me-2"></i> Home</a>
+                            <a href="#"><i class="fas fa-angle-right me-2"></i> Services</a>
+                            <a href="#"><i class="fas fa-angle-right me-2"></i> About Us</a>
+                            <a href="#"><i class="fas fa-angle-right me-2"></i> Latest Projects</a>
+                            <a href="#"><i class="fas fa-angle-right me-2"></i> testimonial</a>
+                            <a href="#"><i class="fas fa-angle-right me-2"></i> Our Team</a>
+                            <a href="#"><i class="fas fa-angle-right me-2"></i> Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="footer-item d-flex flex-column">
+                            <h4 class="text-white mb-4">Contact Info</h4>
+                            <a href=""><i class="fa fa-map-marker-alt me-2"></i> 123 Street, New York, USA</a>
+                            <a href=""><i class="fas fa-envelope me-2"></i> info@example.com</a>
+                            <a href=""><i class="fas fa-envelope me-2"></i> info@example.com</a>
+                            <a href=""><i class="fas fa-phone me-2"></i> +012 345 67890</a>
+                            <a href="" class="mb-3"><i class="fas fa-print me-2"></i> +012 345 67890</a>
+                            <div class="d-flex align-items-center">
+                                <a class="btn btn-light btn-md-square me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-light btn-md-square me-2" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-light btn-md-square me-2" href=""><i class="fab fa-instagram"></i></a>
+                                <a class="btn btn-light btn-md-square me-0" href=""><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="footer-item-post d-flex flex-column">
+                            <h4 class="text-white mb-4">Popular Post</h4>
+                            <div class="d-flex flex-column mb-3">
+                                <p class="text-uppercase text-primary mb-2">Investment</p>
+                                <a href="#" class="text-body">Revisiting Your Investment & Distribution Goals</a>
+                            </div>
+                            <div class="d-flex flex-column mb-3">
+                                <p class="text-uppercase text-primary mb-2">Business</p>
+                                <a href="#" class="text-body">Dimensional Fund Advisors Interview with Director</a>
+                            </div>
+                            <div class="footer-btn text-start">
+                                <a href="#" class="btn btn-light rounded-pill px-4">View All Post <i class="fa fa-arrow-right ms-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+        
+        <!-- Copyright Start -->
+        <div class="container-fluid copyright py-4">
+            <div class="container">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-6 text-center text-md-start mb-md-0">
+                        <span class="text-body"><a href="#" class="border-bottom text-primary"><i class="fas fa-copyright text-light me-2"></i>Your Site Name</a>, All right reserved.</span>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end text-body">
+                        <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
+                        <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
+                        <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
+                        Designed By <a class="border-bottom text-primary" href="https://htmlcodex.com">HTML Codex</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>   
+        
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+
+
+    <script>
+        // Sample investment data
+        const investmentData = [
+            {
+                id: 1,
+                type: 'Conservative Growth',
+                initialAmount: 15000,
+                currentValue: 16890,
+                withdrawn: 2000,
+                purchaseDate: '2023-08-15',
+                status: 'active'
+            },
+            {
+                id: 2,
+                type: 'Balanced Portfolio',
+                initialAmount: 25000,
+                currentValue: 31200,
+                withdrawn: 3500,
+                purchaseDate: '2023-06-10',
+                status: 'active'
+            },
+            {
+                id: 3,
+                type: 'Aggressive Growth',
+                initialAmount: 20000,
+                currentValue: 26280,
+                withdrawn: 0,
+                purchaseDate: '2023-09-22',
+                status: 'active'
+            },
+            {
+                id: 4,
+                type: 'Conservative Growth',
+                initialAmount: 8000,
+                currentValue: 8560,
+                withdrawn: 1000,
+                purchaseDate: '2024-01-05',
+                status: 'active'
+            },
+            {
+                id: 5,
+                type: 'Balanced Portfolio',
+                initialAmount: 18000,
+                currentValue: 22140,
+                withdrawn: 2000,
+                purchaseDate: '2023-11-18',
+                status: 'active'
+            },
+            {
+                id: 6,
+                type: 'Aggressive Growth',
+                initialAmount: 12000,
+                currentValue: 0,
+                withdrawn: 12000,
+                purchaseDate: '2023-05-20',
+                status: 'withdrawn'
+            },
+            {
+                id: 7,
+                type: 'Conservative Growth',
+                initialAmount: 10000,
+                currentValue: 11480,
+                withdrawn: 0,
+                purchaseDate: '2024-02-14',
+                status: 'active'
+            }
+        ];
+
+        // Populate investment table
+        function populateInvestmentTable() {
+            const tbody = document.getElementById('investmentTableBody');
+            tbody.innerHTML = '';
+
+            investmentData.forEach(investment => {
+                const gainLoss = investment.currentValue + investment.withdrawn - investment.initialAmount;
+                const returnPercent = ((gainLoss / investment.initialAmount) * 100).toFixed(1);
+                const isPositive = gainLoss >= 0;
+
+                const badgeClass = investment.type === 'Conservative Growth' ? 'badge-conservative' :
+                                 investment.type === 'Balanced Portfolio' ? 'badge-balanced' : 'badge-aggressive';
+
+                const statusClass = investment.status === 'active' ? 'status-active' :
+                                   investment.status === 'withdrawn' ? 'status-withdrawn' : 'status-partial';
+
+                const row = `
+                    <tr>
+                        <td>
+                            <span class="investment-badge ${badgeClass}">${investment.type}</span>
+                        </td>
+                        <td>$${investment.initialAmount.toLocaleString()}</td>
+                        <td>$${investment.currentValue.toLocaleString()}</td>
+                        <td class="${isPositive ? 'positive' : 'negative'}">
+                            <i class="fas fa-arrow-${isPositive ? 'up' : 'down'} me-1"></i>
+                            $${Math.abs(gainLoss).toLocaleString()}
+                        </td>
+                        <td class="${isPositive ? 'positive' : 'negative'}">
+                            ${isPositive ? '+' : ''}${returnPercent}%
+                        </td>
+                        <td>$${investment.withdrawn.toLocaleString()}</td>
+                        <td>
+                            <span class="status-dot ${statusClass}"></span>
+                            ${investment.status.charAt(0).toUpperCase() + investment.status.slice(1)}
+                        </td>
+                        <td>
+                            <button class="action-btn me-1" onclick="viewDetails(${investment.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${investment.status === 'active' ? 
+                                `<button class="action-btn secondary" onclick="withdraw(${investment.id})">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </button>` : ''
+                            }
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Initialize performance chart
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            // Sample data for the last year
+            const months = ['Jun 2024', 'Jul 2024', 'Aug 2024', 'Sep 2024', 'Oct 2024', 'Nov 2024', 
+                           'Dec 2024', 'Jan 2025', 'Feb 2025', 'Mar 2025', 'Apr 2025', 'May 2025', 'Jun 2025'];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: [102000, 105200, 108800, 112400, 107600, 114200, 118900, 122100, 119800, 124300, 125600, 127350, 127350],
+                        borderColor: 'rgb(102, 126, 234)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize allocation chart
+        function initAllocationChart() {
+            const ctx = document.getElementById('allocationChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Conservative Growth', 'Balanced Portfolio', 'Aggressive Growth'],
+                    datasets: [{
+                        data: [41, 37, 22],
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(23, 162, 184, 0.8)',
+                            'rgba(220, 53, 69, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(23, 162, 184, 1)',
+                            'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Action functions
+        function updateChart(period) {
+            // Update active button
+            document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Here you would update the chart data based on the selected period
+            console.log('Updating chart for period:', period);
+        }
+
+        function viewDetails(investmentId) {
+            alert(`Viewing details for investment ${investmentId}`);
+        }
+
+        function withdraw(investmentId) {
+            if (confirm('Are you sure you want to make a withdrawal from this investment?')) {
+                alert(`Initiating withdrawal from investment ${investmentId}`);
+            }
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            populateInvestmentTable();
+            initPerformanceChart();
+            initAllocationChart();
+        });
+    </script>
+</body>
+</html>
